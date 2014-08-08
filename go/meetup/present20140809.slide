@@ -1,0 +1,137 @@
+Go Meetup
+Testing & Benchmark
+09 Aug 2014
+Tags: benchmark go golang meetup testing
+
+Pitsanu Swangpheaw
+Sprint3r
+spitsanu@gmail.com
+
+* about:me
+- Programming addict
+- PHP, Groovy, Go
+
+* Why testing?
+- Programming is not easy
+- Ensure quality
+- Improve reliability
+
+* How to test?
+- create file ending with "_test.go"
+- import "testing"
+- create function name Test... with signature func (t *testing.T)
+- test will fail when the function calls a failure function such as t.Error or t.Fail
+.code code.go /START1 OMIT/,/END1 OMIT/
+- run
+    go test -v ./...
+ 
+* Testing Code That's hard to test
+.code code.go /START2 OMIT/,/END2 OMIT/
+- Tightly coupled
+
+* Testing Code That's hard to test
+- Functions are first class citizens
+- Test can access internal package members
+.code code.go /START3 OMIT/,/END3 OMIT/
+
+* Mock
+.code code.go /START4 OMIT/,/END4 OMIT/
+
+* Stub
+.code code.go /START5 OMIT/,/END5 OMIT/
+.code code.go /START6 OMIT/,/END6 OMIT/
+
+* Table-Driven
+.code code.go /START7 OMIT/,/END7 OMIT/
+
+* Table-Driven (Cont)
+.code code.go /START8 OMIT/,/END8 OMIT/
+
+* Benchmark
+- create file ending with "_test.go"
+- import "testing"
+- create function name *Benchmark*... with signature func (t ***testing.B*)
+.code code.go /START9 OMIT/,/END9 OMIT/
+- run
+    go test -bench=. -benchtime=1s
+
+
+
+* Testing Framework
+- Go Builtin
+- Ginkgo & Gomega
+- Testify
+- GoConvey
+
+* Go Builtin
+- builtin
+- lightweight
+- straightforward 
+- access private member
+- table-driven
+- benchmark
+
+* Ginkgo & Gomega
+.link https://github.com/onsi/ginkgo
+
+    Describe("ScoreKeeper", func() {
+        var scoreKeeper *ScoreKeeper
+
+        BeforeEach(func() {
+            var err error
+            scoreKeeper, err = NewScoreKeeper("Denver Broncos")
+            Expect(err).NotTo(HaveOccured())
+        })
+
+        It("should have a starting score of 0", func() {
+            Expect(scoreKeeper.Score).To(Equal(0))
+        })              
+
+        Context("when a touchdown is scored", func() {
+            It("should increment the score", func() {
+                Expect(scoreKeeper.Score).To(Equal(6))
+            })
+        })
+    })
+
+* Testify
+.link https://github.com/stretchr/testify
+    func TestSomething(t *testing.T) {
+        assert := assert.New(t)
+        assert.Equal(123, 123, "they should be equal")
+        assert.NotEqual(123, 456, "they should not be equal")
+        assert.Nil(object)
+
+        if assert.NotNil(object) {
+            assert.Equal("Something", object.Value)
+        }
+    }
+
+
+* GoConvey
+.link https://github.com/smartystreets/goconvey
+
+    func TestSpec(t *testing.T) {
+
+        // Only pass t into top-level Convey calls
+        Convey("Given some integer with a starting value", t, func() {
+            x := 1
+
+            Convey("When the integer is incremented", func() {
+                x++
+
+                Convey("The value should be greater by one", func() {
+                    So(x, ShouldEqual, 2)
+                })
+            })
+        })
+    }
+
+
+* RESOURCES
+.link http://golang.org/doc/faq
+.link http://golang.org/doc/code.html
+.link http://openmymind.net/Dependency-Injection-In-Go/
+.link http://dave.cheney.net/2013/06/09/writing-table-driven-tests-in-go
+.link http://dave.cheney.net/2013/06/30/how-to-write-benchmarks-in-go
+
